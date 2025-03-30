@@ -15,6 +15,7 @@ variables:
   buildConfiguration: 'Release'
   packageVersion: '1.0.$(Build.BuildId)'
   projectName: 'ShowCase'  # Starter project
+  libraryName: 'StringLibrary'  # Secondary project
 
 steps:
 - task: NuGetToolInstaller@1
