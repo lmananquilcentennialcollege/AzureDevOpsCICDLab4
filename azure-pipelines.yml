@@ -45,6 +45,14 @@ steps:
 - script: echo $(projectName)
   displayName: 'Print Project Name'
 
+- script: dir
+  displayName: 'List Files in Directory'  
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '5.x'  # or any specific version you want to install  
+
 # Step 3: Restore packages for ShowCase
 - task: DotNetCoreCLI@2
   displayName: 'Restore packages (ShowCase)'
