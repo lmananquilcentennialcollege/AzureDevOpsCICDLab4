@@ -16,6 +16,7 @@ variables:
   packageVersion: '1.0.$(Build.BuildId)'
   projectName: 'ShowCase'  # Starter project
   libraryName: 'StringLibrary'  # Secondary project
+  feedName: 'AzureDevOpsCICDLab4Proj/AzureDevOpsLab4Feed'
 
 steps:
 - task: NuGetToolInstaller@1
