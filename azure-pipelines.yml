@@ -42,18 +42,70 @@ steps:
     Get-Content 'nuget.config'
   displayName: 'Create nuget.config'
 
-- task: NuGetCommand@2
+# Step 3: Restore packages for ShowCase
+- task: DotNetCoreCLI@2
+  displayName: 'Restore packages (ShowCase)'
   inputs:
-    restoreSolution: '$(solution)'
+    command: 'restore'
+    projects: '/$(projectName).csproj'
+    feedsToUse: 'config'
+    nugetConfigPath: 'nuget.config'
 
-- task: VSBuild@1
+# Step 4: Build the ShowCase project
+- task: DotNetCoreCLI@2
+  displayName: 'Build project (ShowCase)'
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'build'
+    projects: '/$(projectName).csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore --verbosity detailed'
 
-- task: VSTest@2
+# Step 5: Restore packages for StringLibrary
+- task: DotNetCoreCLI@2
+  displayName: 'Restore packages (StringLibrary)'
   inputs:
-    platform: '$(buildPlatform)'
+    command: 'restore'
+    projects: '/$(libraryName).csproj'
+    feedsToUse: 'config'
+    nugetConfigPath: 'nuget.config'
+
+# Step 6: Build the StringLibrary project
+- task: DotNetCoreCLI@2
+  displayName: 'Build project (StringLibrary)'
+  inputs:
+    command: 'build'
+    projects: '/$(libraryName).csproj'
+    arguments: '--configuration $(buildConfiguration) --no-restore --verbosity detailed'
+
+# Step 7: Pack NuGet package
+- task: DotNetCoreCLI@2
+  displayName: 'Create NuGet package (StringLibrary)'
+  inputs:
+    command: 'pack'
+    packagesToPack: '/$(libraryName).csproj'
     configuration: '$(buildConfiguration)'
+    outputDir: '$(Build.ArtifactStagingDirectory)'
+    nobuild: true
+    versioningScheme: 'byEnvVar'
+    versionEnvVar: 'packageVersion'
+    arguments: '--verbosity detailed'
+
+# Step 8: Debug - Show package files (FIXED FOR WINDOWS)
+- script: |
+    echo Generated packages:
+    dir /B "$(Build.ArtifactStagingDirectory)"
+  displayName: 'List generated packages'
+  failOnStderr: false
+
+# Step 9: Authenticate
+- task: NuGetAuthenticate@1
+  displayName: 'Authenticate with Azure Artifacts'
+
+# Step 10: Push to Azure Artifacts
+- task: DotNetCoreCLI@2
+  displayName: 'Push to Azure Artifacts'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '$(feedName)'
+    arguments: '--skip-duplicate --verbosity detailed'
