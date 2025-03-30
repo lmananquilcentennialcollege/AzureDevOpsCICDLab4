@@ -54,11 +54,6 @@ steps:
 - script: dir StringLibrary
   displayName: 'List Files in ShowCase Directory'    
 
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '5.x'  # or any specific version you want to install  
-
 # Step 3: Restore packages for ShowCase
 - task: DotNetCoreCLI@2
   displayName: 'Restore packages (ShowCase)'
