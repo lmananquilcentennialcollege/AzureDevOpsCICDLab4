@@ -68,7 +68,7 @@ steps:
   displayName: 'Build project (ShowCase)'
   inputs:
     command: 'build'
-    projects: '/$(projectName).csproj'
+    projects: 'ShowCase/$(projectName).csproj'
     arguments: '--configuration $(buildConfiguration) --no-restore --verbosity detailed'
 
 # Step 5: Restore packages for StringLibrary
