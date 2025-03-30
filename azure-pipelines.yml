@@ -20,7 +20,12 @@ variables:
   feedUrl: 'https://pkgs.dev.azure.com/DevOpsCentennialCollege/AzureDevOpsCICDLab4Proj/_packaging/AzureDevOpsLab4Feed/nuget/v3/index.json'
 
 steps:
-- task: NuGetToolInstaller@1
+# Step 1: Install .NET 8 SDK
+- task: UseDotNet@2
+  displayName: 'Install .NET 8 SDK'
+  inputs:
+    version: '8.x'
+    installationPath: 'C:\sdk'
 
 - task: NuGetCommand@2
   inputs:
