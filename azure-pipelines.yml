@@ -27,6 +27,21 @@ steps:
     version: '8.x'
     installationPath: 'C:\sdk'
 
+# Step 2: Create nuget.config
+- powershell: |
+    @" 
+    <?xml version="1.0" encoding="utf-8"?>
+    <configuration>
+      <packageSources>
+        <clear />
+        <add key="newfeed" value="$(feedUrl)" />
+      </packageSources>
+    </configuration>
+    "@ | Out-File -FilePath 'nuget.config' -Encoding utf8
+    Write-Host "Created nuget.config:"
+    Get-Content 'nuget.config'
+  displayName: 'Create nuget.config'
+
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
