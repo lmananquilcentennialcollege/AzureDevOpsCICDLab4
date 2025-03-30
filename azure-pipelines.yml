@@ -59,7 +59,7 @@ steps:
   displayName: 'Restore packages (ShowCase)'
   inputs:
     command: 'restore'
-    projects: 'ShowCase/ShowCase.csproj'
+    projects: 'ShowCase/$(projectName).csproj'
     feedsToUse: 'config'
     nugetConfigPath: 'nuget.config'
 
@@ -76,7 +76,7 @@ steps:
   displayName: 'Restore packages (StringLibrary)'
   inputs:
     command: 'restore'
-    projects: '/$(libraryName).csproj'
+    projects: 'StringLibrary/$(libraryName).csproj'
     feedsToUse: 'config'
     nugetConfigPath: 'nuget.config'
 
@@ -85,7 +85,7 @@ steps:
   displayName: 'Build project (StringLibrary)'
   inputs:
     command: 'build'
-    projects: '/$(libraryName).csproj'
+    projects: 'StringLibrary/$(libraryName).csproj'
     arguments: '--configuration $(buildConfiguration) --no-restore --verbosity detailed'
 
 # Step 7: Pack NuGet package
@@ -93,7 +93,7 @@ steps:
   displayName: 'Create NuGet package (StringLibrary)'
   inputs:
     command: 'pack'
-    packagesToPack: '/$(libraryName).csproj'
+    packagesToPack: 'StringLibrary/$(libraryName).csproj'
     configuration: '$(buildConfiguration)'
     outputDir: '$(Build.ArtifactStagingDirectory)'
     nobuild: true
