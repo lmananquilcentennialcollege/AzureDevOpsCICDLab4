@@ -48,6 +48,12 @@ steps:
 - script: dir
   displayName: 'List Files in Directory'  
 
+- script: dir ShowCase
+  displayName: 'List Files in ShowCase Directory'
+
+- script: dir StringLibrary
+  displayName: 'List Files in ShowCase Directory'    
+
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
